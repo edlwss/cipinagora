@@ -1,0 +1,25 @@
+:root {
+    --primary-color: #6ec1e4;   /* голубой */
+    --secondary-color: #f7d26a; /* жёлтый */
+    --bg-color: #f9fafb;
+    --border-radius: 12px;
+    --text-color: #333;
+    --muted-text: #777;
+    --font-main: 'Inter', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+h2 {
+    margin: 0;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
