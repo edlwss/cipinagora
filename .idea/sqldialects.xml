@@ -2,5 +2,9 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V1__add_sportscenter_student_instructor_entity.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V2__add_users.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V3__add_role.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V4__update_users.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/backend/src/main/resources/db/migration/V5__rename_users.sql" dialect="GenericSQL" />
   </component>
 </project>

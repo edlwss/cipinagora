@@ -5,9 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itche.backend.controller.student.payload.NewStudentPayload;
 import ru.itche.backend.controller.student.payload.UpdateStudentPayload;
+import ru.itche.backend.entity.Role;
 import ru.itche.backend.entity.Student;
 import ru.itche.backend.entity.FullName;
+import ru.itche.backend.entity.User;
 import ru.itche.backend.repository.student.StudentRepository;
+import ru.itche.backend.repository.user.RoleRepository;
+import ru.itche.backend.repository.user.UserRepository;
+import ru.itche.backend.service.user.UserService;
+
 
 import java.util.Optional;
 
@@ -16,6 +22,8 @@ import java.util.Optional;
 public class DefStudentService implements StudentService {
 
     private final StudentRepository studentRepository;
+    private final RoleRepository roleRepository;
+    private final UserService userService;
 
     @Override
     public Iterable<Student> getAllStudents() {
@@ -30,10 +38,25 @@ public class DefStudentService implements StudentService {
                 payload.fullNameFirstName(),
                 payload.fullNameMiddleName()
         );
-        return studentRepository.save(new Student(null,
-                fullName,
-                payload.photo()));
+
+        Role studentRole = roleRepository.findByName("student")
+                .orElseThrow(() -> new IllegalArgumentException("Роль student не найдена"));
+
+
+        User user = userService.createUser(payload.login(),
+                payload.password(),
+                payload.email(),
+                payload.phone(),
+                studentRole);
+
+        Student student = new Student();
+        student.setFullName(fullName);
+        student.setPhoto(payload.photo());
+        student.setUser(user);
+
+        return studentRepository.save(student);
     }
+
 
     @Override
     public Optional<Student> findStudent(Long studentId) {

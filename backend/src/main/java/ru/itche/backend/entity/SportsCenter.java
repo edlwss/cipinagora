@@ -28,5 +28,10 @@ public class SportsCenter {
 
     @Column(name = "coordinates", nullable = false)
     private String coordinates;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
 }
 

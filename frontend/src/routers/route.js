@@ -11,15 +11,6 @@ const routes = [
             component: 'StudentProfile'
         }
     },
-    {
-        path: '/cipinagora/student/profile/:id/edit',
-        component: StudentPage,
-        name: 'student-edit',
-        meta: {
-            title: 'Редактировать студента',
-            component: 'StudentEdit'
-        }
-    }
 
 ];
 

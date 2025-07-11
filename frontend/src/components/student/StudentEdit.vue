@@ -97,8 +97,13 @@ async function submitForm() {
     photo: photoPath
   }
 
-  await updateStudent(studentId, payload)
-  closeModal()
+  try {
+    await updateStudent(studentId, payload)
+    emit('saved')
+    closeModal()
+  } catch (error) {
+    console.error('Ошибка при сохранении:', error)
+  }
 }
 </script>
 

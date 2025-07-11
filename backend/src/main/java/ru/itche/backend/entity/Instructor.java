@@ -34,4 +34,9 @@ public class Instructor {
 
     @Column(name = "official_employment", nullable = false)
     private boolean officialEmployment;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
 }

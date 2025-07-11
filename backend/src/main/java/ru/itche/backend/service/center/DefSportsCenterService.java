@@ -6,8 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.itche.backend.controller.center.payload.NewSportsCenterPayload;
 import ru.itche.backend.controller.center.payload.UpdateSportsCenterPayload;
 import ru.itche.backend.entity.Address;
+import ru.itche.backend.entity.Role;
 import ru.itche.backend.entity.SportsCenter;
+import ru.itche.backend.entity.User;
 import ru.itche.backend.repository.center.SportsCenterRepository;
+import ru.itche.backend.repository.user.RoleRepository;
+import ru.itche.backend.service.user.UserService;
 
 import java.util.Optional;
 
@@ -16,6 +20,8 @@ import java.util.Optional;
 public class DefSportsCenterService implements SportsCenterService {
 
     private final SportsCenterRepository centerRepository;
+    private final UserService userService;
+    private final RoleRepository roleRepository;
 
     @Override
     public Iterable<SportsCenter> getAll() {
@@ -37,12 +43,22 @@ public class DefSportsCenterService implements SportsCenterService {
                 payload.addressBuilding()
         );
 
+        Role instructorRole = roleRepository.findByName("sportscenter")
+                .orElseThrow(() -> new IllegalArgumentException("Роль sportscenter не найдена"));
+
+        User user = userService.createUser(payload.login(),
+                payload.password(),
+                payload.email(),
+                payload.phone(),
+                instructorRole);
+
         SportsCenter center = new SportsCenter(
                 null,
                 payload.name(),
                 payload.description(),
                 address,
-                payload.coordinates()
+                payload.coordinates(),
+                user
         );
 
         return centerRepository.save(center);

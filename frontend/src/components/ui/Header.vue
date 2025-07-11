@@ -8,36 +8,27 @@
       </button>
 
       <div v-if="settingsOpen" class="settings-dropdown">
-        <RouterLink :to="profileEditLink" class="dropdown-link">
+        <button @click="openProfileEdit" class="dropdown-link">
           Настройки профиля
-        </RouterLink>
+        </button>
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref } from 'vue'
 import { SettingsIcon } from 'lucide-vue-next'
+
+const emit = defineEmits(['toggle-sidebar', 'open-edit'])
 
 const settingsOpen = ref(false)
 const toggleSettings = () => (settingsOpen.value = !settingsOpen.value)
 
-const route = useRoute()
-
-const profileEditLink = computed(() => {
-  const segments = route.path.split('/')
-  const id = route.params.id
-
-  const role = segments.includes('student')
-      ? 'student'
-      : segments.includes('instructor')
-          ? 'instructor'
-          : null
-
-  return role && id ? `/cipinagora/${role}/profile/${id}/edit` : '#'
-})
+const openProfileEdit = () => {
+  emit('open-edit')
+  settingsOpen.value = false
+}
 </script>
 
 

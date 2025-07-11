@@ -22,4 +22,9 @@ public class Student {
 
     @Column(name = "photo")
     private String photo;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
 }
