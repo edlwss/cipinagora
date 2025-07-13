@@ -58,9 +58,8 @@ const showEditModal = ref(false)
 const sidebarOpen = ref(false)
 
 const fullName = computed(() => {
-  if (!student.value.fullName) return ''
-  const { firstName, lastName, middleName } = student.value.fullName
-  return `${lastName} ${firstName} ${middleName}`
+  const { firstName, lastName, middleName } = student.value
+  return [lastName, firstName, middleName].filter(Boolean).join(' ')
 })
 
 const openEditModal = () => {

@@ -16,7 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration
@@ -29,7 +28,11 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/cipinagora/api/students").hasRole("STUDENT")
+                        .requestMatchers(
+                                "/cipinagora/api/student/**").hasRole("STUDENT")
+                        .requestMatchers(
+                                "/cipinagora/api/instructor/**").hasRole("INSTRUCTOR")
+                        .requestMatchers("/cipinagora/api/center/**").hasRole("SPORTSCENTER")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

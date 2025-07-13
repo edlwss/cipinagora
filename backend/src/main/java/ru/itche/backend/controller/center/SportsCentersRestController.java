@@ -4,10 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import ru.itche.backend.controller.center.payload.GetSportsCenterPayload;
 import ru.itche.backend.entity.SportsCenter;
 import ru.itche.backend.controller.center.payload.NewSportsCenterPayload;
 import ru.itche.backend.service.center.SportsCenterService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -18,11 +20,12 @@ public class SportsCentersRestController {
     private final SportsCenterService centerService;
 
     @GetMapping
-    public Iterable<SportsCenter> getAll() {
-        return centerService.getAll();
+    public List<GetSportsCenterPayload> getAll() {
+        Iterable<SportsCenter> centers = centerService.getAll();
+        return GetSportsCenterPayload.fromList(centers);
     }
 
-    @PostMapping
+    @PostMapping("/registration")
     public ResponseEntity<SportsCenter> create(@RequestBody NewSportsCenterPayload payload,
                                                UriComponentsBuilder uriBuilder) {
 

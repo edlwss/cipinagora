@@ -5,8 +5,8 @@ public record NewSportsCenterPayload(
         String password,
         String email,
         String phone,
-        String name,
 
+        String name,
         String description,
         String coordinates,
         String addressRegion,

@@ -49,16 +49,16 @@ const originalPhoto = ref(null)
 
 onMounted(async () => {
   const { data } = await getStudentById(studentId)
-  form.value.lastName = data.fullName.lastName || ''
-  form.value.firstName = data.fullName.firstName || ''
-  form.value.middleName = data.fullName.middleName || ''
+  form.value.lastName = data.lastName || ''
+  form.value.firstName = data.firstName|| ''
+  form.value.middleName = data.middleName || ''
   originalPhoto.value = data.photo || null
   preview.value = originalPhoto.value
 })
 
 function closeModal() {
   emit('close')
-  router.push(`/cipinagora/student/profile/${studentId}`)
+  router.push(`/cipinagora/profile/${studentId}`)
 }
 
 function generateUniqueName() {

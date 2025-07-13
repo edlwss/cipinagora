@@ -10,7 +10,7 @@ import ru.itche.backend.controller.student.payload.UpdateStudentPayload;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cipinagora/api/students/student/{id:\\d+}")
+@RequestMapping("/cipinagora/api/student/{id:\\d+}")
 public class StudentRestController {
 
     private final StudentService studentService;
@@ -26,7 +26,7 @@ public class StudentRestController {
         return GetStudentPayload.from(student);
     }
 
-    @PatchMapping
+    @PatchMapping("/edit")
     public ResponseEntity<?> updateStudent(@PathVariable("id") Long id,
                                            @RequestBody UpdateStudentPayload payload) {
 
@@ -34,7 +34,7 @@ public class StudentRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteStudent(@PathVariable("id") Long studentId) {
         studentService.deleteStudent(studentId);
         return ResponseEntity.noContent().build();

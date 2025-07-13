@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.itche.backend.config.JwtUserDetails;
 import ru.itche.backend.entity.Role;
 import ru.itche.backend.entity.User;
 import ru.itche.backend.repository.user.RoleRepository;
@@ -36,14 +37,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByLogin(username)
-                .orElseThrow(() -> new UsernameNotFoundException(
-                        "User not found with login: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new JwtUserDetails(
+                user.getId(),
                 user.getLogin(),
                 user.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName().toUpperCase()))
-
         );
     }
 }

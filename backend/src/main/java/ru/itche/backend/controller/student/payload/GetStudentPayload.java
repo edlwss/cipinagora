@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record GetStudentPayload(
-        String fullNameLastName,
-        String fullNameFirstName,
-        String fullNameMiddleName,
+        String lastName,
+        String firstName,
+        String middleName,
+        String fullName,
         String photo,
         Long user_id
 ) {
@@ -17,6 +18,7 @@ public record GetStudentPayload(
                 student.getFullName().getLastName(),
                 student.getFullName().getFirstName(),
                 student.getFullName().getMiddleName(),
+                student.getFullName().getFullName(),
                 student.getPhoto(),
                 student.getUser().getId()
         );
