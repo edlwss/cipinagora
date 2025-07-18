@@ -72,7 +72,7 @@ public class DefInstructorService implements InstructorService {
         instructorRepository.findById(id)
                 .ifPresent(instructor -> {
                     instructor.setFullName(new FullName(
-                            payload.fullNameFirstName(),
+                            payload.fullNameLastName(),
                             payload.fullNameFirstName(),
                             payload.fullNameMiddleName()
                     ));

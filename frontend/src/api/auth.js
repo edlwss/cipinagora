@@ -4,6 +4,10 @@ import api from './axiosInstance'
 const token = ref(sessionStorage.getItem('token') || '')
 const user = ref(parseToken(token.value))
 
+if (token.value) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
+}
+
 function parseToken(token) {
     if (!token) return null
     try {
@@ -13,7 +17,8 @@ function parseToken(token) {
             userId: payload.userId,
             roles: payload.roles
         }
-    } catch {
+    } catch (e) {
+        console.warn('Ошибка парсинга токена', e)
         return null
     }
 }
@@ -33,6 +38,10 @@ function logout() {
     user.value = null
     sessionStorage.removeItem('token')
     delete api.defaults.headers.common['Authorization']
+}
+
+export function getCurrentUser() {
+    return api.get('/auth/me')
 }
 
 export function useAuth() {

@@ -1,26 +1,40 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import StudentPage from "@/pages/StudentPage.vue";
 import LoginPage from "@/pages/LoginPage.vue";
+import RegistrationForm from "@/pages/RegistrationForm.vue";
 import { authrole } from '@/api/authrole.js'
+import ProfilePage from "@/pages/ProfilePage.vue";
+import NotFoundPage from "@/pages/error/NotFoundPage.vue";
 
 const routes = [
     {
-        path: '/',
-        redirect: '/login'
+        path: '/cipinagora/profile/:id',
+        component: ProfilePage,
+        name: 'profile',
+        meta: {
+            roles: ['ROLE_STUDENT', 'ROLE_INSTRUCTOR', 'ROLE_SPORTSCENTER']
+        }
     },
     {
-        path: '/cipinagora/profile/:id',
-        component: StudentPage,
-        name: 'student-profile',
+        path: '/register',
+        component: RegistrationForm,
+        name: 'register',
         meta: {
-            title: 'Профиль студента',
-            component: 'StudentProfile',
-            roles: ['ROLE_STUDENT']
+            title: 'Регистрация',
+            public: true
         }
     },
     {
         path: '/login',
-        component: LoginPage
+        component: LoginPage,
+        meta: {
+            public: true
+        }
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'not-found',
+        component: NotFoundPage,
+        meta: { public: true }
     }
 ];
 

@@ -1,6 +1,7 @@
 package ru.itche.backend.controller.instructor;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itche.backend.controller.instructor.payload.GetInstructorPayload;
@@ -16,9 +17,9 @@ public class InstructorRestController {
     private final InstructorService instructorService;
 
     @ModelAttribute("instructor")
-    public Instructor getInstructor(@PathVariable("id") Long id) {
-        return instructorService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+    public Instructor getInstructor(@PathVariable("id") Long userId) {
+        return instructorService.findById(userId)
+                .orElseThrow(() -> new InstructorRestController.InstructorNotFoundException(userId));
     }
 
     @GetMapping
@@ -37,5 +38,12 @@ public class InstructorRestController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         instructorService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    private static class InstructorNotFoundException extends RuntimeException {
+        public InstructorNotFoundException(Long id) {
+            super("Student with id " + id + " not found");
+        }
     }
 }

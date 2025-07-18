@@ -1,15 +1,25 @@
 <template>
   <div class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
-
       <button class="close-button" @click="closeModal">×</button>
-
-      <h2>Редактировать профиль</h2>
+      <h2>Редактировать инструктора</h2>
 
       <form @submit.prevent="submitForm">
         <label>Фамилия <input v-model="form.lastName" required /></label>
         <label>Имя <input v-model="form.firstName" required /></label>
         <label>Отчество <input v-model="form.middleName" /></label>
+        <label>Навыки <textarea v-model="form.skillDescription" /></label>
+        <label>Номер сертификата <input v-model="form.certificateNumber" /></label>
+
+        <label>
+          <input type="checkbox" v-model="form.officialEmployment" />
+          Официальное трудоустройство
+        </label>
+
+        <label>
+          <input type="checkbox" v-model="form.dataVerified" />
+          Данные подтверждены
+        </label>
 
         <div class="photo-upload">
           <label>Фото профиля</label>
@@ -25,16 +35,16 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getStudentById, updateStudent } from '@/api/student'
 import { getCurrentUser } from '@/api/auth'
+import { getInstructorById, updateInstructor } from '@/api/instructor'
 import '@/assets/profile/edit.css'
 
 const router = useRouter()
 const emit = defineEmits(['close', 'saved'])
+
 const userId = ref(null)
 const previousRoute = ref(router.currentRoute.value.fullPath)
 
@@ -42,6 +52,10 @@ const form = ref({
   lastName: '',
   firstName: '',
   middleName: '',
+  skillDescription: '',
+  certificateNumber: '',
+  officialEmployment: false,
+  dataVerified: false,
   photoFile: null
 })
 
@@ -52,11 +66,17 @@ onMounted(async () => {
   const { data } = await getCurrentUser()
   userId.value = data.id
 
-  const userData = await getStudentById(userId.value)
-  form.value.lastName = userData.data.lastName || ''
-  form.value.firstName = userData.data.firstName || ''
-  form.value.middleName = userData.data.middleName || ''
-  originalPhoto.value = userData.data.photo || null
+  const { data: instructor } = await getInstructorById(userId.value)
+  Object.assign(form.value, {
+    lastName: instructor.fullNameLastName || '',
+    firstName: instructor.fullNameFirstName || '',
+    middleName: instructor.fullNameMiddleName || '',
+    skillDescription: instructor.skillDescription || '',
+    certificateNumber: instructor.certificateNumber || '',
+    officialEmployment: instructor.officialEmployment || false,
+    dataVerified: instructor.dataVerified || false
+  })
+  originalPhoto.value = instructor.photo || null
   preview.value = originalPhoto.value
 })
 
@@ -66,8 +86,7 @@ function closeModal() {
 }
 
 function generateUniqueName() {
-  const timestamp = Date.now()
-  return `student_${userId.value}_${timestamp}`
+  return `instructor_${userId.value}_${Date.now()}`
 }
 
 function onFileChange(event) {
@@ -78,10 +97,10 @@ function onFileChange(event) {
 }
 
 async function uploadFileLocally(file, fileName) {
-  const localUploadEndpoint = 'http://localhost:3001/upload'
+  const uploadUrl = 'http://localhost:3001/upload'
   const formData = new FormData()
   formData.append('file', file, fileName)
-  await fetch(localUploadEndpoint, { method: 'POST', body: formData })
+  await fetch(uploadUrl, { method: 'POST', body: formData })
 }
 
 async function submitForm() {
@@ -89,28 +108,29 @@ async function submitForm() {
 
   if (form.value.photoFile) {
     const ext = form.value.photoFile.name.split('.').pop()
-    const uniqueFileName = generateUniqueName() + '.' + ext
-    photoPath = `/uploads/${uniqueFileName}`
-    await uploadFileLocally(form.value.photoFile, uniqueFileName)
+    const fileName = generateUniqueName() + '.' + ext
+    photoPath = `/uploads/${fileName}`
+    await uploadFileLocally(form.value.photoFile, fileName)
   }
 
   const payload = {
     fullNameLastName: form.value.lastName,
     fullNameFirstName: form.value.firstName,
     fullNameMiddleName: form.value.middleName,
-    photo: photoPath
+    photo: photoPath,
+    skillDescription: form.value.skillDescription,
+    certificateNumber: form.value.certificateNumber,
+    dataVerified: form.value.dataVerified,
+    officialEmployment: form.value.officialEmployment
   }
 
   try {
-    await updateStudent(userId.value, payload)
+    await updateInstructor(userId.value, payload)
     emit('saved')
     await router.push(`/cipinagora/profile/${userId.value}`)
-  } catch (error) {
-    console.error('Ошибка при сохранении:', error)
+  } catch (err) {
+    console.error('Ошибка при сохранении:', err)
   }
 }
 </script>
-
-
-
 

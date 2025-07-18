@@ -46,4 +46,10 @@ public class UserService implements UserDetailsService {
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName().toUpperCase()))
         );
     }
+
+    public User findByLogin(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + login));
+    }
+
 }

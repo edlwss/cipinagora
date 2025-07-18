@@ -61,3 +61,14 @@
     color: #999;
     border-radius: var(--border-radius);
 }
+
+.verified-icon {
+    color: green;
+    font-size: 1.2rem;
+}
+
+.certificate-number {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+}

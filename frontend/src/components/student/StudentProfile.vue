@@ -1,18 +1,13 @@
 <template>
   <div class="profile-page">
-    <!-- Шапка -->
-    <AppHeader
+   <AppHeader
         @toggle-sidebar="sidebarOpen = !sidebarOpen"
         @open-edit="openEditModal"
     />
-
-    <!-- Сайдбар -->
     <AppSidebar
         :visible="sidebarOpen"
         @close="sidebarOpen = false"
     />
-
-    <!-- Основное содержимое -->
     <main class="main-content">
       <div class="profile-card">
         <div class="profile-header">
@@ -51,6 +46,7 @@ import StudentEditModal from '@/components/student/StudentEdit.vue'
 import { getStudentById } from '@/api/student'
 import '@/assets/profile/profile.css'
 import '@/assets/profile/sidebarheader.css'
+import router from "@/routers/route.js";
 
 const route = useRoute()
 const student = ref({})
@@ -77,8 +73,17 @@ const handleProfileUpdate = async () => {
 }
 
 onMounted(async () => {
-  const response = await getStudentById(route.params.id)
-  student.value = response.data
+  try {
+    const response = await getStudentById(route.params.id)
+    student.value = response.data
+  } catch (error) {
+    const status = error?.response?.status
+    if ([404].includes(status)) {
+      await router.replace({name: 'not-found'})
+    } else {
+      console.error('Ошибка загрузки профиля:', error)
+    }
+  }
 })
 </script>
 

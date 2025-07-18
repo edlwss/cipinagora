@@ -1,6 +1,8 @@
 export function authrole(to, from, next) {
     const token = sessionStorage.getItem('token')
 
+    if (to.meta.public) return next()
+
     if (!token && to.path !== '/login') {
         return next('/login')
     }
@@ -21,11 +23,10 @@ export function authrole(to, from, next) {
 
             return next()
         } catch (e) {
-            console.warn('Ошибка парсинга токена', e)
+            console.warn('Ошибка парсинга токена в authrole.js', e)
             return next('/login')
         }
     }
 
     next()
 }
-

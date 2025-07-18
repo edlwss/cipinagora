@@ -1,8 +1,10 @@
 package ru.itche.backend.controller.center;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.itche.backend.controller.center.payload.GetSportsCenterPayload;
 import ru.itche.backend.entity.SportsCenter;
 import ru.itche.backend.service.center.SportsCenterService;
@@ -16,9 +18,9 @@ public class SportsCenterRestController {
     private final SportsCenterService centerService;
 
     @ModelAttribute("center")
-    public SportsCenter getCenter(@PathVariable("id") Long id) {
-        return centerService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Sports center not found"));
+    public SportsCenter getCenter(@PathVariable("id") Long userId) {
+        return centerService.findById(userId)
+                .orElseThrow(() -> new SportsCenterRestController.CenterNotFoundException(userId));
     }
 
     @GetMapping
@@ -37,5 +39,12 @@ public class SportsCenterRestController {
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         centerService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    private static class CenterNotFoundException extends RuntimeException {
+        public CenterNotFoundException(Long id) {
+            super("Student with id " + id + " not found");
+        }
     }
 }
