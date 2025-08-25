@@ -72,3 +72,43 @@
     color: #666;
     margin-bottom: 0.5rem;
 }
+
+.gender-inline {
+    position: relative;
+    font-weight: 600;
+    margin-left: 4px;
+    cursor: help;
+    color: inherit; /* та же палитра, что и текст */
+}
+
+.tooltip {
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: #fff;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    opacity: 0;
+    animation: fadeIn 0.2s forwards;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -4px;
+    border-width: 4px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}

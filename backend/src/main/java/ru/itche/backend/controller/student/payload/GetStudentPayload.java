@@ -10,6 +10,9 @@ public record GetStudentPayload(
         String firstName,
         String middleName,
         String fullName,
+        String gender,
+        Long ageId,
+        String age,
         String photo,
         Long user_id
 ) {
@@ -19,6 +22,9 @@ public record GetStudentPayload(
                 student.getFullName().getFirstName(),
                 student.getFullName().getMiddleName(),
                 student.getFullName().getFullName(),
+                student.getGender().name(),
+                student.getAge().getId(),
+                student.getAge().getNameCategories(),
                 student.getPhoto(),
                 student.getUser().getId()
         );

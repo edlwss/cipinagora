@@ -2,7 +2,6 @@ package ru.itche.backend.service.student;
 
 import ru.itche.backend.controller.student.payload.NewStudentPayload;
 import ru.itche.backend.controller.student.payload.UpdateStudentPayload;
-import ru.itche.backend.entity.FullName;
 import ru.itche.backend.entity.Student;
 
 import java.util.Optional;

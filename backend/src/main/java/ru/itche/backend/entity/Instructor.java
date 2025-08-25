@@ -2,6 +2,14 @@ package ru.itche.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.itche.backend.entity.auth.User;
+import ru.itche.backend.entity.reference.AgeCategories;
+import ru.itche.backend.entity.valueobject.FullName;
+import ru.itche.backend.entity.enums.Gender;
+import ru.itche.backend.entity.reference.Sport;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -19,6 +27,14 @@ public class Instructor {
 
     @Embedded
     private FullName fullName;
+
+    @Column(name = "gender", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @ManyToOne
+    @JoinColumn(name = "age_id", nullable = false)
+    private AgeCategories age;
 
     @Column(name = "photo", nullable = false)
     private String photo;
@@ -39,4 +55,13 @@ public class Instructor {
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "instructor_sports",
+            joinColumns = @JoinColumn(name = "instructor_id"),
+            inverseJoinColumns = @JoinColumn(name = "sport_id")
+    )
+    private Set<Sport> sports = new HashSet<>();
+
 }

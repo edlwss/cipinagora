@@ -1,4 +1,4 @@
-package ru.itche.backend.entity;
+package ru.itche.backend.entity.valueobject;
 
 import jakarta.persistence.*;
 import lombok.*;

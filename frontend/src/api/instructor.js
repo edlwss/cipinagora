@@ -6,7 +6,9 @@ export const getInstructorById = (id) =>
     api.get(`/instructor/${id}`);
 export const createInstructor = (data) =>
     api.post('/instructors/registration', data);
-export const updateInstructor = (id, data) =>
-    api.patch(`/instructor/${id}/edit`, data);
+export const updatePersonalInstructor = (id, data) =>
+    api.patch(`/instructor/${id}/edit/personal`, data);
+export const updateAddSportsInstructor = (id, data) =>
+    api.patch(`/instructor/${id}/edit/addsports`, data);
 export const deleteInstructor = (id) =>
     api.delete(`/instructor/${id}/delete`);

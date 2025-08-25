@@ -1,5 +1,7 @@
 package ru.itche.backend.controller.center.payload;
 
+import java.util.List;
+
 public record NewSportsCenterPayload(
         String login,
         String password,
@@ -8,6 +10,8 @@ public record NewSportsCenterPayload(
 
         String name,
         String description,
+        List<Long> sportIds,
+
         String coordinates,
         String addressRegion,
         String addressCity,

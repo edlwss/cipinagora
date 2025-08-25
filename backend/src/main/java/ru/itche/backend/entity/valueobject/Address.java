@@ -1,4 +1,4 @@
-package ru.itche.backend.entity;
+package ru.itche.backend.entity.valueobject;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,5 +22,9 @@ public class Address {
 
     @Column(name = "building", nullable = false)
     private String building;
+
+    public String getFullAddress() {
+        return region + " " + city + " " + street + " " + building;
+    }
 }
 

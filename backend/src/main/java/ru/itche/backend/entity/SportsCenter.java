@@ -2,6 +2,12 @@ package ru.itche.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import ru.itche.backend.entity.auth.User;
+import ru.itche.backend.entity.valueobject.Address;
+import ru.itche.backend.entity.reference.Sport;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "sport_center")
@@ -33,5 +39,14 @@ public class SportsCenter {
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToMany
+    @JoinTable(
+            name = "center_types_sports",
+            joinColumns = @JoinColumn(name = "center_id"),
+            inverseJoinColumns = @JoinColumn(name = "sport_id")
+    )
+    private Set<Sport> sports = new HashSet<>();
+
 }
 

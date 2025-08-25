@@ -11,6 +11,23 @@
         <label>Имя <input v-model="form.firstName" required /></label>
         <label>Отчество <input v-model="form.middleName" /></label>
 
+        <label>Пол
+          <select v-model="form.gender" required>
+            <option disabled value="">Выберите пол</option>
+            <option value="Male">Мужской</option>
+            <option value="Female">Женский</option>
+          </select>
+        </label>
+
+        <label>Возрастная категория
+          <select v-model="form.ageId" required>
+            <option disabled value="">Выберите категорию</option>
+            <option v-for="cat in ageCategories" :key="cat.id" :value="cat.id">
+              {{ cat.nameCategories }}
+            </option>
+          </select>
+        </label>
+
         <div class="photo-upload">
           <label>Фото профиля</label>
           <input type="file" @change="onFileChange" accept="image/*" />
@@ -31,24 +48,39 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getStudentById, updateStudent } from '@/api/student'
 import { getCurrentUser } from '@/api/auth'
-import '@/assets/profile/edit.css'
+import '@/assets/profile/editmenu.css'
+import {getAllAgeCategories} from "@/api/agecategories.js";
 
 const router = useRouter()
 const emit = defineEmits(['close', 'saved'])
 const userId = ref(null)
 const previousRoute = ref(router.currentRoute.value.fullPath)
+const ageCategories = ref([])
 
 const form = ref({
   lastName: '',
   firstName: '',
   middleName: '',
+  ageId: '',
+  gender: '',
   photoFile: null
 })
 
 const preview = ref(null)
 const originalPhoto = ref(null)
 
+async function loadAgeCategories() {
+  try {
+    const { data } = await getAllAgeCategories()
+    ageCategories.value = data
+  } catch (e) {
+    console.error('Ошибка загрузки возрастных категорий', e)
+  }
+}
+
 onMounted(async () => {
+  await loadAgeCategories()
+
   const { data } = await getCurrentUser()
   userId.value = data.id
 
@@ -56,6 +88,8 @@ onMounted(async () => {
   form.value.lastName = userData.data.lastName || ''
   form.value.firstName = userData.data.firstName || ''
   form.value.middleName = userData.data.middleName || ''
+  form.value.ageId = userData.data.ageId || ''
+  form.value.gender = userData.data.gender || ''
   originalPhoto.value = userData.data.photo || null
   preview.value = originalPhoto.value
 })
@@ -98,6 +132,8 @@ async function submitForm() {
     fullNameLastName: form.value.lastName,
     fullNameFirstName: form.value.firstName,
     fullNameMiddleName: form.value.middleName,
+    ageId: form.value.ageId,
+    gender: form.value.gender,
     photo: photoPath
   }
 

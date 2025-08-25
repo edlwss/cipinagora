@@ -5,9 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itche.backend.controller.instructor.payload.GetInstructorPayload;
+import ru.itche.backend.controller.instructor.payload.UpdateInstructorSportsPayload;
 import ru.itche.backend.entity.Instructor;
 import ru.itche.backend.service.instructor.InstructorService;
-import ru.itche.backend.controller.instructor.payload.UpdateInstructorPayload;
+import ru.itche.backend.controller.instructor.payload.UpdateInstructorPersonalPayload;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,10 +28,17 @@ public class InstructorRestController {
         return GetInstructorPayload.from(instructor);
     }
 
-    @PatchMapping("/edit")
-    public ResponseEntity<?> update(@PathVariable("id") Long id,
-                                    @RequestBody UpdateInstructorPayload payload) {
-        instructorService.update(id, payload);
+    @PatchMapping("/edit/addsports")
+    public ResponseEntity<?> addSports(@PathVariable("id") Long id,
+                                    @RequestBody UpdateInstructorSportsPayload payload) {
+        instructorService.addSports(id, payload);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/edit/personal")
+    public ResponseEntity<?> updatePersonal(@PathVariable("id") Long id,
+                                    @RequestBody UpdateInstructorPersonalPayload payload) {
+        instructorService.updatePersonal(id, payload);
         return ResponseEntity.noContent().build();
     }
 
@@ -43,7 +51,7 @@ public class InstructorRestController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     private static class InstructorNotFoundException extends RuntimeException {
         public InstructorNotFoundException(Long id) {
-            super("Student with id " + id + " not found");
+            super("Instructor with id " + id + " not found");
         }
     }
 }

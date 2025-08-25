@@ -10,24 +10,39 @@ public record GetInstructorPayload(
         String fullNameFirstName,
         String fullNameMiddleName,
         String fullName,
+        String gender,
+        Long ageId,
+        String age,
         String photo,
+
         String skillDescription,
         String certificateNumber,
         boolean dataVerified,
         boolean officialEmployment,
+        List<SportPayload> sports,
         Long user_id
 ) {
+
     public static GetInstructorPayload from(Instructor instructor) {
+        List<SportPayload> sportPayloads = instructor.getSports().stream()
+                .map(s -> new SportPayload(s.getId(), s.getName()))
+                .toList();
+
         return new GetInstructorPayload(
                 instructor.getFullName().getLastName(),
                 instructor.getFullName().getFirstName(),
                 instructor.getFullName().getMiddleName(),
                 instructor.getFullName().getFullName(),
+                instructor.getGender().name(),
+                instructor.getAge().getId(),
+                instructor.getAge().getNameCategories(),
                 instructor.getPhoto(),
+
                 instructor.getSkillDescription(),
                 instructor.getCertificateNumber(),
                 instructor.isDataVerified(),
                 instructor.isOfficialEmployment(),
+                sportPayloads,
                 instructor.getUser().getId()
         );
     }
@@ -39,5 +54,6 @@ public record GetInstructorPayload(
         }
         return list;
     }
-}
 
+    public record SportPayload(Long id, String name) {}
+}

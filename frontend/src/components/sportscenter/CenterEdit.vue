@@ -28,7 +28,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { getCurrentUser } from '@/api/auth'
 import { getCenterById, updateCenter } from '@/api/center'
-import '@/assets/profile/edit.css'
+import '@/assets/profile/editmenu.css'
 
 const emit = defineEmits(['close', 'saved'])
 const router = useRouter()

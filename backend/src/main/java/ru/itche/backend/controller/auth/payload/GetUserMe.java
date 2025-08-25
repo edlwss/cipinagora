@@ -1,6 +1,6 @@
 package ru.itche.backend.controller.auth.payload;
 
-import ru.itche.backend.entity.User;
+import ru.itche.backend.entity.auth.User;
 
 public record GetUserMe(
         Long id,

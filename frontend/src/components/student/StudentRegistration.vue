@@ -8,6 +8,23 @@
     <label>Логин <input v-model="form.login" required /></label>
     <label>Пароль <input v-model="form.password" type="password" required /></label>
 
+    <label>Пол
+      <select v-model="form.gender" required>
+        <option disabled value="">Выберите пол</option>
+        <option value="Male">Мужской</option>
+        <option value="Female">Женский</option>
+      </select>
+    </label>
+
+    <label>Возрастная категория
+      <select v-model="form.ageId" required>
+        <option disabled value="">Выберите категорию</option>
+        <option v-for="cat in ageCategories" :key="cat.id" :value="cat.id">
+          {{ cat.nameCategories }}
+        </option>
+      </select>
+    </label>
+
     <div class="photo-upload">
       <label>Фото профиля</label>
       <input type="file" @change="onFileChange" accept="image/*" />
@@ -20,14 +37,16 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import {ref, reactive, onMounted} from 'vue'
 import { useRouter } from 'vue-router'
 import { createStudent } from '@/api/student.js'
+import { getAllAgeCategories } from '@/api/agecategories.js'
 
 const router = useRouter()
 const error = ref('')
 const preview = ref(null)
 const photoFile = ref(null)
+const ageCategories = ref([])
 
 const form = reactive({
   login: '',
@@ -37,6 +56,8 @@ const form = reactive({
   fullNameLastName: '',
   fullNameFirstName: '',
   fullNameMiddleName: '',
+  ageId: '',
+  gender: '',
   photo: ''
 })
 
@@ -59,6 +80,15 @@ async function uploadFileLocally(file, fileName) {
   await fetch(localUploadEndpoint, {method: 'POST', body: formData})
 }
 
+async function loadAgeCategories() {
+  try {
+    const { data } = await getAllAgeCategories()
+    ageCategories.value = data
+  } catch (e) {
+    console.error('Ошибка загрузки возрастных категорий', e)
+  }
+}
+
 async function submitForm() {
   let photoPath = null
 
@@ -78,6 +108,8 @@ async function submitForm() {
       fullNameLastName: form.fullNameLastName,
       fullNameFirstName: form.fullNameFirstName,
       fullNameMiddleName: form.fullNameMiddleName,
+      ageId: form.ageId,
+      gender: form.gender,
       photo: photoPath
     })
 
@@ -87,4 +119,8 @@ async function submitForm() {
     console.error(e)
   }
 }
+
+onMounted(() => {
+  loadAgeCategories()
+})
 </script>

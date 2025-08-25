@@ -44,7 +44,7 @@ public class SportsCenterRestController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     private static class CenterNotFoundException extends RuntimeException {
         public CenterNotFoundException(Long id) {
-            super("Student with id " + id + " not found");
+            super("Sports Center with id " + id + " not found");
         }
     }
 }

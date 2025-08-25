@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.itche.backend.controller.auth.payload.GetUserMe;
 import ru.itche.backend.controller.auth.payload.JwtRequest;
-import ru.itche.backend.entity.User;
+import ru.itche.backend.entity.auth.User;
 import ru.itche.backend.service.user.AuthService;
 import ru.itche.backend.service.user.UserService;
 

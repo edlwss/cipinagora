@@ -20,8 +20,18 @@
               № {{ instructor.certificateNumber || '—' }}
             </p>
             <div class="basic-details">
-              <span>Группа: {{ '—' }}</span>
-              <span>Пол: {{ '—' }}</span>
+              <p class="student-group">
+                Возрастная группа:
+                <span class="muted">{{ instructor.age }}</span>
+                <span
+                    v-if="instructor.gender"
+                    class="gender-inline"
+                    @mouseenter="showTooltip = true"
+                    @mouseleave="showTooltip = false"
+                >({{ genderShort }})
+                  <span v-if="showTooltip" class="tooltip">{{ genderFull }}</span>
+              </span>
+              </p>
             </div>
           </div>
         </div>
@@ -45,13 +55,13 @@
         v-if="showEditModal"
         :instructor-id="instructorId"
         @close="closeEditModal"
-        @saved="fetchInstructor"
+        @saved="handleProfileUpdate"
     />
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import { useRoute } from 'vue-router'
 import AppHeader from '@/components/ui/Header.vue'
 import AppSidebar from '@/components/ui/Sidebar.vue'
@@ -69,6 +79,26 @@ const sidebarOpen = ref(false)
 
 const openEditModal = () => (showEditModal.value = true)
 const closeEditModal = () => (showEditModal.value = false)
+
+const showTooltip = ref(false)
+
+const genderShort = computed(() => {
+  if (instructor.value.gender === 'Male') return 'М'
+  if (instructor.value.gender === 'Female') return 'Ж'
+  return ''
+})
+
+const genderFull = computed(() => {
+  if (instructor.value.gender === 'Male') return 'Мужской пол'
+  if (instructor.value.gender === 'Female') return 'Женский пол'
+  return ''
+})
+
+const handleProfileUpdate = async () => {
+  const response = await getInstructorById(route.params.id)
+  instructor.value = response.data
+  closeEditModal()
+}
 
 async function fetchInstructor() {
   try {

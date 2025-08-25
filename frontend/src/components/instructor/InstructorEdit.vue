@@ -1,136 +1,117 @@
 <template>
-  <div class="modal-overlay" @click.self="closeModal">
+  <div class="modal-overlay" @click.self="handleClose">
     <div class="modal-content">
-      <button class="close-button" @click="closeModal">×</button>
-      <h2>Редактировать инструктора</h2>
+      <button class="close-button" @click="handleClose">×</button>
 
-      <form @submit.prevent="submitForm">
-        <label>Фамилия <input v-model="form.lastName" required /></label>
-        <label>Имя <input v-model="form.firstName" required /></label>
-        <label>Отчество <input v-model="form.middleName" /></label>
-        <label>Навыки <textarea v-model="form.skillDescription" /></label>
-        <label>Номер сертификата <input v-model="form.certificateNumber" /></label>
+      <!-- Меню -->
+      <div v-if="view === 'menu'" class="menu-screen">
+        <h3>Настройки профиля</h3>
+        <ul class="menu-list">
+          <li @click="open('personal')">Персональные данные</li>
+          <li @click="open('confidential')">Конфиденциальные данные</li>
+          <li @click="open('sports')">Навыки</li>
+          <li @click="open('documents')">Документы</li>
+          <li @click="open('attach')">Прикрепление к СЦ</li>
+        </ul>
+      </div>
 
-        <label>
-          <input type="checkbox" v-model="form.officialEmployment" />
-          Официальное трудоустройство
-        </label>
-
-        <label>
-          <input type="checkbox" v-model="form.dataVerified" />
-          Данные подтверждены
-        </label>
-
-        <div class="photo-upload">
-          <label>Фото профиля</label>
-          <input type="file" @change="onFileChange" accept="image/*" />
-          <img v-if="preview" :src="preview" alt="Preview" class="preview-img" />
+      <!-- Персональные данные -->
+      <div v-if="view === 'personal'" class="form-screen">
+        <div class="header">
+          <button class="back" @click="open('menu')">←</button>
+          <h3>Личные данные</h3>
         </div>
+        <PersonalForm
+            :instructor-id="instructorId"
+            @saved="handleSaved"
+            @cancel="open('menu')"
+        />
+      </div>
 
-        <div class="modal-actions">
-          <button type="submit">Сохранить</button>
+      <!-- Конфиденциальные данные -->
+      <div v-if="view === 'confidential'" class="form-screen">
+        <div class="header">
+          <button class="back" @click="open('menu')">←</button>
+          <h3>Конфиденциальные данные</h3>
         </div>
-      </form>
+        <ConfidentialForm
+            :user-id="userId"
+            @saved="handleSaved"
+            @cancel="open('menu')"
+        />
+      </div>
+
+      <!-- Виды спорта -->
+      <div v-if="view === 'sports'" class="form-screen">
+        <div class="header">
+          <button class="back" @click="open('menu')">←</button>
+          <h3>Виды спорта</h3>
+        </div>
+        <p>Здесь будет выбор видов спорта.</p>
+      </div>
+
+      <!-- Документы -->
+      <div v-if="view === 'documents'" class="form-screen">
+        <div class="header">
+          <button class="back" @click="open('menu')">←</button>
+          <h3>Документы</h3>
+        </div>
+        <p>Загрузка документов появится позже.</p>
+      </div>
+
+      <!-- Прикрепление к СЦ -->
+      <div v-if="view === 'attach'" class="form-screen">
+        <div class="header">
+          <button class="back" @click="open('menu')">←</button>
+          <h3>Прикрепление к СЦ</h3>
+        </div>
+        <p>Тут будет логика прикрепления к спортцентру.</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import PersonalForm from '@/components/instructor/InstructorEditPersonal.vue'
+import ConfidentialForm from '@/components/instructor/InstructorEditConfig.vue'
 import { getCurrentUser } from '@/api/auth'
-import { getInstructorById, updateInstructor } from '@/api/instructor'
-import '@/assets/profile/edit.css'
+import '@/assets/profile/editmenu.css'
 
-const router = useRouter()
+const props = defineProps({
+  instructorId: { type: Number, required: false }
+})
 const emit = defineEmits(['close', 'saved'])
 
+const view = ref('menu') // текущее отображение
 const userId = ref(null)
-const previousRoute = ref(router.currentRoute.value.fullPath)
 
-const form = ref({
-  lastName: '',
-  firstName: '',
-  middleName: '',
-  skillDescription: '',
-  certificateNumber: '',
-  officialEmployment: false,
-  dataVerified: false,
-  photoFile: null
-})
+function open(name) {
+  view.value = name
+}
 
-const preview = ref(null)
-const originalPhoto = ref(null)
+function handleClose() {
+  emit('close')
+}
+
+function handleSaved(payload) {
+  emit('saved', payload)
+  open('menu')
+}
+
+async function logout() {
+  console.log('logout...')
+  open('menu')
+}
 
 onMounted(async () => {
-  const { data } = await getCurrentUser()
-  userId.value = data.id
-
-  const { data: instructor } = await getInstructorById(userId.value)
-  Object.assign(form.value, {
-    lastName: instructor.fullNameLastName || '',
-    firstName: instructor.fullNameFirstName || '',
-    middleName: instructor.fullNameMiddleName || '',
-    skillDescription: instructor.skillDescription || '',
-    certificateNumber: instructor.certificateNumber || '',
-    officialEmployment: instructor.officialEmployment || false,
-    dataVerified: instructor.dataVerified || false
-  })
-  originalPhoto.value = instructor.photo || null
-  preview.value = originalPhoto.value
-})
-
-function closeModal() {
-  emit('close')
-  router.push(previousRoute.value)
-}
-
-function generateUniqueName() {
-  return `instructor_${userId.value}_${Date.now()}`
-}
-
-function onFileChange(event) {
-  const file = event.target.files[0]
-  if (!file) return
-  form.value.photoFile = file
-  preview.value = URL.createObjectURL(file)
-}
-
-async function uploadFileLocally(file, fileName) {
-  const uploadUrl = 'http://localhost:3001/upload'
-  const formData = new FormData()
-  formData.append('file', file, fileName)
-  await fetch(uploadUrl, { method: 'POST', body: formData })
-}
-
-async function submitForm() {
-  let photoPath = originalPhoto.value
-
-  if (form.value.photoFile) {
-    const ext = form.value.photoFile.name.split('.').pop()
-    const fileName = generateUniqueName() + '.' + ext
-    photoPath = `/uploads/${fileName}`
-    await uploadFileLocally(form.value.photoFile, fileName)
-  }
-
-  const payload = {
-    fullNameLastName: form.value.lastName,
-    fullNameFirstName: form.value.firstName,
-    fullNameMiddleName: form.value.middleName,
-    photo: photoPath,
-    skillDescription: form.value.skillDescription,
-    certificateNumber: form.value.certificateNumber,
-    dataVerified: form.value.dataVerified,
-    officialEmployment: form.value.officialEmployment
-  }
-
   try {
-    await updateInstructor(userId.value, payload)
-    emit('saved')
-    await router.push(`/cipinagora/profile/${userId.value}`)
-  } catch (err) {
-    console.error('Ошибка при сохранении:', err)
+    const { data } = await getCurrentUser()
+    userId.value = data.id
+  } catch (e) {
+    console.warn('Не удалось получить текущего пользователя', e)
   }
-}
+})
 </script>
+
 

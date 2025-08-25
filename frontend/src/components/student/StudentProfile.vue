@@ -16,8 +16,19 @@
             <span v-else class="photo-placeholder">фото</span>
           </div>
           <div>
-            <p class="student-name">{{ fullName }}</p>
-            <p class="student-group">возрастная группа — <span class="muted">пока пусто</span></p>
+            <p class="student-name">{{ student.fullName }}</p>
+            <p class="student-group">
+              Возрастная группа:
+              <span class="muted">{{ student.age }}</span>
+              <span
+                  v-if="student.gender"
+                  class="gender-inline"
+                  @mouseenter="showTooltip = true"
+                  @mouseleave="showTooltip = false"
+              >({{ genderShort }})
+                  <span v-if="showTooltip" class="tooltip">{{ genderFull }}</span>
+              </span>
+            </p>
           </div>
         </div>
 
@@ -53,9 +64,18 @@ const student = ref({})
 const showEditModal = ref(false)
 const sidebarOpen = ref(false)
 
-const fullName = computed(() => {
-  const { firstName, lastName, middleName } = student.value
-  return [lastName, firstName, middleName].filter(Boolean).join(' ')
+const showTooltip = ref(false)
+
+const genderShort = computed(() => {
+  if (student.value.gender === 'Male') return 'М'
+  if (student.value.gender === 'Female') return 'Ж'
+  return ''
+})
+
+const genderFull = computed(() => {
+  if (student.value.gender === 'Male') return 'Мужской пол'
+  if (student.value.gender === 'Female') return 'Женский пол'
+  return ''
 })
 
 const openEditModal = () => {
@@ -78,7 +98,7 @@ onMounted(async () => {
     student.value = response.data
   } catch (error) {
     const status = error?.response?.status
-    if ([404].includes(status)) {
+    if ([404, 500].includes(status)) {
       await router.replace({name: 'not-found'})
     } else {
       console.error('Ошибка загрузки профиля:', error)

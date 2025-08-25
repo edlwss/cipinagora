@@ -1,7 +1,7 @@
 package ru.itche.backend.repository.user;
 
 import org.springframework.data.repository.CrudRepository;
-import ru.itche.backend.entity.Role;
+import ru.itche.backend.entity.auth.Role;
 
 import java.util.Optional;
 

@@ -5,15 +5,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itche.backend.controller.center.payload.NewSportsCenterPayload;
 import ru.itche.backend.controller.center.payload.UpdateSportsCenterPayload;
-import ru.itche.backend.entity.Address;
-import ru.itche.backend.entity.Role;
+import ru.itche.backend.entity.reference.Sport;
+import ru.itche.backend.entity.valueobject.Address;
+import ru.itche.backend.entity.auth.Role;
 import ru.itche.backend.entity.SportsCenter;
-import ru.itche.backend.entity.User;
+import ru.itche.backend.entity.auth.User;
 import ru.itche.backend.repository.center.SportsCenterRepository;
+import ru.itche.backend.repository.lookup.SportRepository;
 import ru.itche.backend.repository.user.RoleRepository;
 import ru.itche.backend.service.user.UserService;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class DefSportsCenterService implements SportsCenterService {
     private final SportsCenterRepository centerRepository;
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final SportRepository sportRepository;
 
     @Override
     public Iterable<SportsCenter> getAll() {
@@ -46,6 +52,10 @@ public class DefSportsCenterService implements SportsCenterService {
         Role instructorRole = roleRepository.findByName("sportscenter")
                 .orElseThrow(() -> new IllegalArgumentException("Роль sportscenter не найдена"));
 
+        Set<Sport> sports = StreamSupport.stream(
+                        sportRepository.findAllById(payload.sportIds()).spliterator(), false)
+                .collect(Collectors.toSet());
+
         User user = userService.createUser(payload.login(),
                 payload.password(),
                 payload.email(),
@@ -58,8 +68,9 @@ public class DefSportsCenterService implements SportsCenterService {
                 payload.description(),
                 address,
                 payload.coordinates(),
-                user
-        );
+                user,
+                sports
+                );
 
         return centerRepository.save(center);
     }
