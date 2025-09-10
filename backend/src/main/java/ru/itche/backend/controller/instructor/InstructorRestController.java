@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itche.backend.controller.instructor.payload.GetInstructorPayload;
+import ru.itche.backend.controller.instructor.payload.UpdateInstructorPhotoPayload;
 import ru.itche.backend.controller.instructor.payload.UpdateInstructorSportsPayload;
 import ru.itche.backend.entity.Instructor;
 import ru.itche.backend.service.instructor.InstructorService;
@@ -39,6 +40,13 @@ public class InstructorRestController {
     public ResponseEntity<?> updatePersonal(@PathVariable("id") Long id,
                                     @RequestBody UpdateInstructorPersonalPayload payload) {
         instructorService.updatePersonal(id, payload);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/edit/photo")
+    public ResponseEntity<?> updatePhoto(@PathVariable("id") Long id,
+                                         @RequestBody UpdateInstructorPhotoPayload payload) {
+        instructorService.updatePhoto(id, payload);
         return ResponseEntity.noContent().build();
     }
 

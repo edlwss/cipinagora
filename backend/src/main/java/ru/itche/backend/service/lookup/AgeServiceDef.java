@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class DefAgeService implements AgeService{
+public class AgeServiceDef implements AgeService{
 
     private final AgeRepository ageRepository;
 

@@ -22,7 +22,7 @@
 <script setup>
 import {ref, reactive} from 'vue'
 import {useRouter} from 'vue-router'
-import {createCenter} from '@/api/center.js'
+import {createCenter} from '@/api/entity/center.js'
 
 const router = useRouter()
 const error = ref('')

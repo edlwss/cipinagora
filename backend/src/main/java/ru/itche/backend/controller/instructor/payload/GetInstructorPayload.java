@@ -1,5 +1,6 @@
 package ru.itche.backend.controller.instructor.payload;
 
+import ru.itche.backend.controller.lookup.payload.SportsPayload;
 import ru.itche.backend.entity.Instructor;
 
 import java.util.ArrayList;
@@ -19,13 +20,13 @@ public record GetInstructorPayload(
         String certificateNumber,
         boolean dataVerified,
         boolean officialEmployment,
-        List<SportPayload> sports,
+        List<SportsPayload> sports,
         Long user_id
 ) {
 
     public static GetInstructorPayload from(Instructor instructor) {
-        List<SportPayload> sportPayloads = instructor.getSports().stream()
-                .map(s -> new SportPayload(s.getId(), s.getName()))
+        List<SportsPayload> sportPayloads = instructor.getSports().stream()
+                .map(s -> new SportsPayload(s.getId(), s.getName()))
                 .toList();
 
         return new GetInstructorPayload(
@@ -55,5 +56,4 @@ public record GetInstructorPayload(
         return list;
     }
 
-    public record SportPayload(Long id, String name) {}
 }

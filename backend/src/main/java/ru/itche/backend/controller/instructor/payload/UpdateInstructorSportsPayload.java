@@ -4,5 +4,4 @@ import java.util.List;
 
 public record UpdateInstructorSportsPayload(
         List<Long> sportIds
-) {
-}
+) {}

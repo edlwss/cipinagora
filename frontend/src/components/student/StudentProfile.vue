@@ -54,7 +54,7 @@ import { useRoute } from 'vue-router'
 import AppHeader from '@/components/ui/Header.vue'
 import AppSidebar from '@/components/ui/Sidebar.vue'
 import StudentEditModal from '@/components/student/StudentEdit.vue'
-import { getStudentById } from '@/api/student'
+import { getStudentById } from '@/api/entity/student.js'
 import '@/assets/profile/profile.css'
 import '@/assets/profile/sidebarheader.css'
 import router from "@/routers/route.js";

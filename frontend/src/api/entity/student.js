@@ -1,4 +1,4 @@
-import api from './axiosInstance';
+import api from '../axiosInstance.js';
 
 
 export const getAllStudents = () => api.get('/students');

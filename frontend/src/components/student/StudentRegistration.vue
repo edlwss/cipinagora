@@ -39,8 +39,8 @@
 <script setup>
 import {ref, reactive, onMounted} from 'vue'
 import { useRouter } from 'vue-router'
-import { createStudent } from '@/api/student.js'
-import { getAllAgeCategories } from '@/api/agecategories.js'
+import { createStudent } from '@/api/entity/student.js'
+import { getAllAgeCategories } from '@/api/lookup/agecategories.js'
 
 const router = useRouter()
 const error = ref('')

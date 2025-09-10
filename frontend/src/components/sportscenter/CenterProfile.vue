@@ -35,7 +35,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getCenterById } from '@/api/center'
+import { getCenterById } from '@/api/entity/center.js'
 import AppHeader from '@/components/ui/Header.vue'
 import AppSidebar from '@/components/ui/Sidebar.vue'
 import SportsCenterEditModal from '@/components/sportscenter/CenterEdit.vue'

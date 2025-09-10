@@ -54,8 +54,8 @@
 <script setup>
 import {ref, reactive, onMounted} from 'vue'
 import { useRouter } from 'vue-router'
-import { createInstructor } from '@/api/instructor.js'
-import {getAllAgeCategories} from "@/api/agecategories.js";
+import { createInstructor } from '@/api/entity/instructor.js'
+import {getAllAgeCategories} from "@/api/lookup/agecategories.js";
 
 const router = useRouter()
 const error = ref('')

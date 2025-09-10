@@ -16,7 +16,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuth } from '@/api/auth'
+import { useAuth } from '@/api/auth/auth.js'
 import "@/assets/auth/login.css"
 
 const login = ref('')

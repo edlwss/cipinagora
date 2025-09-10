@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import api from './axiosInstance'
+import api from '../axiosInstance.js'
 
 const token = ref(sessionStorage.getItem('token') || '')
 const user = ref(parseToken(token.value))

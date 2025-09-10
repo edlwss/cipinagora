@@ -6,7 +6,7 @@
     <main class="main-content">
       <div class="profile-card">
         <div class="profile-header">
-          <div class="photo-wrapper">
+          <div class="photo-wrapper" @click="openPhotoModal">
             <img v-if="instructor.photo" :src="instructor.photo" alt="Фото" class="photo-img" />
             <span v-else class="photo-placeholder">фото</span>
           </div>
@@ -57,6 +57,15 @@
         @close="closeEditModal"
         @saved="handleProfileUpdate"
     />
+
+    <InstructorEditPhoto
+        v-if="showPhotoModal"
+        :initial-photo="instructor.photo"
+        :user-id="instructorId"
+        @close="showPhotoModal = false"
+        @saved="handlePhotoSaved"
+    />
+
   </div>
 </template>
 
@@ -66,10 +75,11 @@ import { useRoute } from 'vue-router'
 import AppHeader from '@/components/ui/Header.vue'
 import AppSidebar from '@/components/ui/Sidebar.vue'
 import InstructorEditModal from '@/components/instructor/InstructorEdit.vue'
-import { getInstructorById } from '@/api/instructor'
+import { getInstructorById } from '@/api/entity/instructor.js'
 import '@/assets/profile/profile.css'
 import '@/assets/profile/sidebarheader.css'
 import router from "@/routers/route.js"
+import InstructorEditPhoto from "@/components/instructor/InstructorEditPhoto.vue";
 
 const route = useRoute()
 const instructorId = Number(route.params.id)
@@ -98,6 +108,16 @@ const handleProfileUpdate = async () => {
   const response = await getInstructorById(route.params.id)
   instructor.value = response.data
   closeEditModal()
+}
+
+const showPhotoModal = ref(false)
+
+function openPhotoModal() {
+  showPhotoModal.value = true
+}
+
+function handlePhotoSaved(newPath) {
+  instructor.value.photo = newPath
 }
 
 async function fetchInstructor() {

@@ -46,9 +46,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getInstructorById, updatePersonalInstructor } from '@/api/instructor'
-import { getAllAgeCategories } from '@/api/agecategories'
-import { getCurrentUser } from '@/api/auth'
+import { getInstructorById, updatePersonalInstructor } from '@/api/entity/instructor.js'
+import { getAllAgeCategories } from '@/api/lookup/agecategories.js'
+import { getCurrentUser } from '@/api/auth/auth.js'
 
 const props = defineProps({
   instructorId: { type: Number, required: false }

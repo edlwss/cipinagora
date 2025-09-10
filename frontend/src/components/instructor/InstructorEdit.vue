@@ -15,7 +15,6 @@
         </ul>
       </div>
 
-      <!-- Персональные данные -->
       <div v-if="view === 'personal'" class="form-screen">
         <div class="header">
           <button class="back" @click="open('menu')">←</button>
@@ -28,7 +27,6 @@
         />
       </div>
 
-      <!-- Конфиденциальные данные -->
       <div v-if="view === 'confidential'" class="form-screen">
         <div class="header">
           <button class="back" @click="open('menu')">←</button>
@@ -46,8 +44,12 @@
         <div class="header">
           <button class="back" @click="open('menu')">←</button>
           <h3>Виды спорта</h3>
+          <SportsForm
+              :instructor-id="instructorId"
+              @saved="handleSaved"
+              @cancel="open('menu')"
+          />
         </div>
-        <p>Здесь будет выбор видов спорта.</p>
       </div>
 
       <!-- Документы -->
@@ -74,8 +76,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import PersonalForm from '@/components/instructor/InstructorEditPersonal.vue'
-import ConfidentialForm from '@/components/instructor/InstructorEditConfig.vue'
-import { getCurrentUser } from '@/api/auth'
+import ConfidentialForm from '@/components/instructor/InstructorEditConfid.vue'
+import SportsForm from '@/components/instructor/InstructorEditAddSports.vue'
+import { getCurrentUser } from '@/api/auth/auth.js'
 import '@/assets/profile/editmenu.css'
 
 const props = defineProps({
@@ -96,11 +99,6 @@ function handleClose() {
 
 function handleSaved(payload) {
   emit('saved', payload)
-  open('menu')
-}
-
-async function logout() {
-  console.log('logout...')
   open('menu')
 }
 

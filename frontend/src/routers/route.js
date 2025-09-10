@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from "@/pages/LoginPage.vue";
 import RegistrationForm from "@/pages/RegistrationForm.vue";
-import { authrole } from '@/api/authrole.js'
+import { authrole } from '@/api/auth/authrole.js'
 import ProfilePage from "@/pages/ProfilePage.vue";
 import NotFoundPage from "@/pages/error/NotFoundPage.vue";
 

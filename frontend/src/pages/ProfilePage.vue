@@ -7,7 +7,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { getCurrentUser } from '@/api/auth.js'
+import { getCurrentUser } from '@/api/auth/auth.js'
 import StudentProfile from '@/components/student/StudentProfile.vue'
 import InstructorProfile from '@/components/instructor/InstructorProfile.vue'
 import CenterProfile from "@/components/sportscenter/CenterProfile.vue";

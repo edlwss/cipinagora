@@ -3,6 +3,7 @@ package ru.itche.backend.service.instructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.itche.backend.controller.instructor.payload.UpdateInstructorPhotoPayload;
 import ru.itche.backend.controller.instructor.payload.UpdateInstructorSportsPayload;
 import ru.itche.backend.entity.reference.AgeCategories;
 import ru.itche.backend.entity.valueobject.FullName;
@@ -126,6 +127,15 @@ public class DefInstructorService implements InstructorService {
                     instructor.setSports(sports);
                 });
 
+    }
+
+    @Override
+    @Transactional
+    public void updatePhoto(Long id, UpdateInstructorPhotoPayload payload) {
+        instructorRepository.findById(id)
+                .ifPresent(instructor -> {
+                    instructor.setPhoto(payload.photo());
+                });
     }
 
     @Override

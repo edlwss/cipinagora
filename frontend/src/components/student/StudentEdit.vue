@@ -46,10 +46,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getStudentById, updateStudent } from '@/api/student'
-import { getCurrentUser } from '@/api/auth'
+import { getStudentById, updateStudent } from '@/api/entity/student.js'
+import { getCurrentUser } from '@/api/auth/auth.js'
 import '@/assets/profile/editmenu.css'
-import {getAllAgeCategories} from "@/api/agecategories.js";
+import {getAllAgeCategories} from "@/api/lookup/agecategories.js";
 
 const router = useRouter()
 const emit = defineEmits(['close', 'saved'])

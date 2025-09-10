@@ -1,6 +1,7 @@
 package ru.itche.backend.service.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.itche.backend.config.JwtUserDetails;
+import ru.itche.backend.controller.user.payload.UpdateUserPasswordPayload;
 import ru.itche.backend.controller.user.payload.UpdateUserPayload;
 import ru.itche.backend.entity.auth.Role;
 import ru.itche.backend.entity.auth.User;
@@ -54,6 +56,11 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + login));
     }
 
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
+
     @Transactional
     public void updateUser(Long id, UpdateUserPayload payload) {
         userRepository.findById(id)
@@ -61,9 +68,6 @@ public class UserService implements UserDetailsService {
 
                     Optional.ofNullable(payload.login())
                             .ifPresent(user::setLogin);
-
-                    Optional.ofNullable(payload.password()) //переднлать логику: доб. проверку старюю пароля
-                            .ifPresent(user::setPassword);
 
                     Optional.ofNullable(payload.email())
                             .ifPresent(user::setEmail);
@@ -78,4 +82,16 @@ public class UserService implements UserDetailsService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
+    public void updateUserPassword(Long id, UpdateUserPasswordPayload payload) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+
+        if (!passwordEncoder.matches(payload.oldPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Неверный текущий пароль");
+        }
+
+        user.setPassword(passwordEncoder.encode(payload.newPassword()));
+        userRepository.save(user);
+    }
 }
