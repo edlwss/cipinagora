@@ -28,3 +28,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+/public/uploads/*
+!/public/uploads/.gitkeep
